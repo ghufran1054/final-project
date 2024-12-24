@@ -1,7 +1,9 @@
 import { TasksContext } from "../contexts/TaskContext";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 const TaskCard = ({ Task }) => {
   const { fetchTasks } = useContext(TasksContext);
+  const Navigate = useNavigate();
   const handleDelete = () => {
     fetch(`http://localhost:3000/tasks/delete/${Task._id}`, {
       method: "DELETE",

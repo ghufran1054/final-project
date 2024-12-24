@@ -1,29 +1,60 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TasksContext } from "../contexts/TaskContext";
-const CreatePage = () => {
+const EditPage = () => {
 
 
     const {fetchTasks, tasks} = useContext(TasksContext);
+    const {id} = useParams();
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         name: "",
         description: "",
         dueDate: "",
       });
 
-      const navigate = useNavigate();
 
 
     const handleUpdate = (e) => {
         e.preventDefault();
 
 
+
+        fetch(`http://localhost:3000/tasks/update/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization" : `Bearer ${localStorage.getItem("final-token")}`,
+            },
+            body: JSON.stringify(formData),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            fetchTasks();
+            navigate("/");
+        })
+        .catch((error) => {
+            console.error("Error creating task:", error);
+        });
+
+
+
     }
 
     useEffect (() => {
         // Gets the task id from the url and then sets the task by iterating the tasks array
-        const {id} = useParams();
         const task = tasks.find((task) => task._id === id);
+        console.log(id);
+        console.log(tasks);
+        setFormData(
+            {
+                name: task.name,
+                description: task.description,
+                dueDate: task.dueDate
+            }
+        );
 
     }, []);
   return (
@@ -40,6 +71,7 @@ const CreatePage = () => {
             <input
               type="text"
               id="name"
+              value={formData.name}
               className="w-full border border-gray-300 rounded-md px-3 py-2"
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
@@ -51,6 +83,7 @@ const CreatePage = () => {
             <input
               type="text"
               id="description"
+              value={formData.description}
               className="w-full border border-gray-300 rounded-md px-3 py-2"
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
 
@@ -63,6 +96,7 @@ const CreatePage = () => {
             <input
               type="date"
               id="dueDate"
+              value={formData.dueDate ? new Date(formData.dueDate).toISOString().slice(0, 10) : ''}
               className="w-full border border-gray-300 rounded-md px-3 py-2"
               onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
 
@@ -71,9 +105,9 @@ const CreatePage = () => {
           <button
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded"
-            onClick={handleCreation}
+            onClick={handleUpdate}
           >
-            Create
+            Edit
           </button>
         </form>
       </div>
@@ -82,4 +116,4 @@ const CreatePage = () => {
 };
 
 
-export default CreatePage;
+export default EditPage;

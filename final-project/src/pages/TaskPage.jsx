@@ -19,7 +19,6 @@ const TaskPage = () => {
     }
   }, []);
 
-  // Display the list of tasks using tasks card
 
   return (
     <>

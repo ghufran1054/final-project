@@ -21,7 +21,6 @@ const CreatePage = () => {
         const token = localStorage.getItem("final-token");
 
 
-        // Make fetch request to /localhost:3000/tasks/create
         console.log(formData);
         fetch(`http://localhost:3000/tasks/create`, {
             method: "POST",

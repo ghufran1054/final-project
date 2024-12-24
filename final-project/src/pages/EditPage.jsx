@@ -44,7 +44,6 @@ const EditPage = () => {
     }
 
     useEffect (() => {
-        // Gets the task id from the url and then sets the task by iterating the tasks array
         const task = tasks.find((task) => task._id === id);
         console.log(id);
         console.log(tasks);
